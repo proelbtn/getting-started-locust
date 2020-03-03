@@ -1,0 +1,9 @@
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: append pubkey into instances
+      local_action: shell gcloud compute ssh --zone {{ instance_zone }} {{ inventory_hostname }} --command=exit
+    - name: remove keys from known_hosts
+      local_action: shell ssh-keygen -R {{ ansible_host }}
+    - name: add keys to known_hosts
+      local_action: shell ssh-keyscan {{ ansible_host }} >> ~/.ssh/known_hosts
